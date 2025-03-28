@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime
-
-# main.py
+import time
+import threading
 
 def initialize_sensors():
     """
@@ -11,27 +11,32 @@ def initialize_sensors():
 
 def process_imu(data):
     """
-    Process the collected sensor data and prepare it for transmission or storage.
+    Process the collected IMU data.
     """
-    pass
+    return data  # Placeholder for actual processing logic
+
 def process_gps(data):
     """
-    Process the collected sensor data and prepare it for transmission or storage.
+    Process the collected GPS data.
     """
-    pass
+    return data  # Placeholder for actual processing logic
 
+def read_imu_data():
+    """
+    Read data from the IMU sensor.
+    """
+    return {"acceleration": [0, 0, 0], "gyroscope": [0, 0, 0]}  # Example IMU data
 
-def read_sensor_data():
+def read_gps_data():
     """
-    Read data from IMU and GPS sensors and return the collected data.
+    Read data from the GPS sensor.
     """
-    imu_data = {"acceleration": [0, 0, 0], "gyroscope": [0, 0, 0]}  # Example IMU data
-    gps_data = {"latitude": 0.0, "longitude": 0.0}  # Example GPS data
-    return imu_data, gps_data
+    return {"latitude": 0.0, "longitude": 0.0}  # Example GPS data
 
 def log_data(imu_data, gps_data):
-    
-    # Create or append to a CSV file
+    """
+    Log IMU and GPS data to a CSV file.
+    """
     with open("sensor_data.csv", mode="a", newline="") as file:
         writer = csv.writer(file)
         
@@ -48,17 +53,42 @@ def log_data(imu_data, gps_data):
                          imu_data["gyroscope"][0], imu_data["gyroscope"][1], imu_data["gyroscope"][2],
                          gps_data["latitude"], gps_data["longitude"]])
 
+def imu_worker():
+    """
+    Worker function to handle IMU data collection at 30Hz.
+    """
+    global imu_data
+    while True:
+        imu_data = process_imu(read_imu_data())
+        time.sleep(1 / 30)  # 30Hz (30 times per second)
+
+def gps_worker():
+    """
+    Worker function to handle GPS data collection at 1Hz.
+    """
+    global gps_data
+    while True:
+        gps_data = process_gps(read_gps_data())
+        time.sleep(1)  # 1Hz (once per second)
+
 def main():
     """
     Main function to orchestrate the workflow.
     """
-    initialize_sensors()
-    imu_data = None
+    global imu_data, gps_data
+    imu_data = {"acceleration": [0, 0, 0], "gyroscope": [0, 0, 0]}  # Default IMU data
+    gps_data = {"latitude": 0.0, "longitude": 0.0}  # Default GPS data
+
+    # Start IMU and GPS workers
+    imu_thread = threading.Thread(target=imu_worker, daemon=True)
+    gps_thread = threading.Thread(target=gps_worker, daemon=True)
+    imu_thread.start()
+    gps_thread.start()
+
+    # Main loop to log data
     while True:
-        imu_data, gps_data = read_sensor_data()  # Update to return both IMU and GPS data
-        processed_imu_data = process_imu(imu_data)
-        processed_gps_data = process_gps(gps_data)
-        log_data(processed_imu_data, processed_gps_data)
+        log_data(imu_data, gps_data)
+        time.sleep(0.1)  # Adjust logging frequency as needed (e.g., 10Hz)
 
 if __name__ == "__main__":
     main()
