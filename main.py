@@ -1,3 +1,6 @@
+import csv
+from datetime import datetime
+
 # main.py
 
 def initialize_sensors():
@@ -27,17 +30,23 @@ def read_sensor_data():
     return imu_data, gps_data
 
 def log_data(imu_data, gps_data):
-    """
-    Log the IMU and GPS data locally for backup or debugging purposes.
-    """
-    print(f"IMU Data: {imu_data}")
-    print(f"GPS Data: {gps_data}")
-    """
-    Read data from IMU and GPS sensors and return the collected data.
-    """
-    imu_data = {"acceleration": [0, 0, 0], "gyroscope": [0, 0, 0]}  # Example IMU data
-    gps_data = {"latitude": 0.0, "longitude": 0.0}  # Example GPS data
-    return imu_data, gps_data
+    
+    # Create or append to a CSV file
+    with open("sensor_data.csv", mode="a", newline="") as file:
+        writer = csv.writer(file)
+        
+        # Write header if the file is empty
+        if file.tell() == 0:
+            writer.writerow(["Timestamp", "IMU_Acceleration_X", "IMU_Acceleration_Y", "IMU_Acceleration_Z",
+                             "IMU_Gyroscope_X", "IMU_Gyroscope_Y", "IMU_Gyroscope_Z",
+                             "GPS_Latitude", "GPS_Longitude"])
+        
+        # Write the data
+        timestamp = datetime.now().isoformat()
+        writer.writerow([timestamp,
+                         imu_data["acceleration"][0], imu_data["acceleration"][1], imu_data["acceleration"][2],
+                         imu_data["gyroscope"][0], imu_data["gyroscope"][1], imu_data["gyroscope"][2],
+                         gps_data["latitude"], gps_data["longitude"]])
 
 def main():
     """
