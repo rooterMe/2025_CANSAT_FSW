@@ -1,3 +1,9 @@
+import can_Common.can_Time
+import can_Common.can_Camera
+import can_Common.can_IMU 
+# import can_Common.can_BT
+# import can_Common.can_SD
+import can_Common.can_GPS 
 import os
 import csv
 import time
@@ -27,7 +33,7 @@ def can_setup() :
 
     f = open(path+f'/cansat_log_{cur_time}.csv', 'w', newline='')
     writer = csv.writer(f)
-    # can_Common.can_Camera.Camera_SetUp(path)
+    can_Common.can_Camera.Camera_SetUp(path)
     can_Common.can_GPS.GPS_Init()
     can_Common.can_IMU.IMU_Init()
     # can_Common.can_BT.BT_Init()
@@ -48,7 +54,7 @@ def can_loop():
     # Life_Sign_Op()
     print(f"loop cnt : {loop_cnt}, Encode : {Encode_Flag}")
     print(f"After Life Sign Op {can_Common.can_Time.Time_Return()}")
-    # can_Common.can_Camera.Camera_Op(writer, path,cur_time, Encode_Flag)
+    can_Common.can_Camera.Camera_Op(writer, path,cur_time, Encode_Flag)
     print(f"After Camera Op {can_Common.can_Time.Time_Return()}")
     can_Common.can_GPS.GPS_Op(writer)
     print(f"After GPS Op {can_Common.can_Time.Time_Return()}")
@@ -74,9 +80,9 @@ if __name__ == "__main__":
     can_setup()
 
     # process_Tx = mp.Process(target=can_Common.can_BT.BT_Tx_Thread_Worker,args=(can_Common.can_BT.Thread_Tx_Queue,))
-    # process_Ec = mp.Process(target=can_Common.can_Camera.Encoding_Thread_Worker,args=(can_Common.can_Camera.Thread_Encoding_Queue,))
+    process_Ec = mp.Process(target=can_Common.can_Camera.Encoding_Thread_Worker,args=(can_Common.can_Camera.Thread_Encoding_Queue,))
     # process_Tx.start()
-    # process_Ec.start()
+    process_Ec.start()
 
     # while can_Common.can_BT.BT_Rx_Op()[0:7] != "CONNECT": # This chekcs connection with GS
     #     print("Waiting for connection...")

@@ -2,7 +2,7 @@ import serial
 import time
 import os
 import csv
-import cs_Common.cs_BT
+import can_Common.can_BT
 
 #global GPS_serial
 global GPS_Buf
@@ -55,7 +55,8 @@ def GPS_Op(writer):
                 writer.writerow(["GPS_DATA", *map(lambda x: str(x), GPS_DATA.split(','))])
 
                 # BT Operation
-                cs_Common.cs_BT.Thread_Tx_Queue.put(GPS_DATA.encode())
+                
+                ### can_Common.can_BT.Thread_Tx_Queue.put(GPS_DATA.encode())
 
                 GPS_DATA = ""
                 return
