@@ -45,7 +45,7 @@ def Cam0_Img_Cap(writer, path, name, Encode_Flag):
     except Exception as e:
         print(f"[Error] {name} Cam0_Error : {e}")
         writer.writerow(["Picture", "Camera0 Error", e])
-
+"""
 def Encoding_Thread_Worker(Q):
     while True:
         while not Q.empty():
@@ -60,6 +60,7 @@ def Encoding_Thread_Worker(Q):
 
             # BT Operation
             ### can_Common.can_BT.Thread_Tx_Queue.put(f'&{str(index)}'.encode() + encoded_camera_data)
+"""
 
 def Camera_Op(writer, path, name, Encode_Flag): 
     print(f"Camera Operation {path, name}")
