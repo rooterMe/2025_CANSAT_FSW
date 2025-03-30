@@ -339,12 +339,12 @@ def IMU_Op(writer):
 
 if __name__ == "__main__":
 
-    IMU_Init()
+    # IMU_Init()
 
-    while True:
-        IMU_Op()
+    # while True:
+        # IMU_Op()
     # ----------------- For IMU Setting -----------------
-'''
+
     IMU_reset()
     IMU_Output_Rate_polling()
 
@@ -357,4 +357,4 @@ if __name__ == "__main__":
     IMU_Set_Distance_Global()
 
     #IMU_921600()
-    '''
+    
