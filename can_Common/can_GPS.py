@@ -2,7 +2,7 @@ import serial
 import time
 import os
 import csv
-import can_Common.can_BT
+#import can_Common.can_BT
 
 #global GPS_serial
 global GPS_Buf
@@ -16,7 +16,7 @@ GPS_serial = None
 
 def GPS_Init() :
     global GPS_serial
-    GPS_serial = serial.Serial('/dev/ttyAMA2', baudrate=9600, parity='N', timeout=0.001)  # when connect to GPIO pins (RX: GPIO 4 TX: GPIO 5)
+    GPS_serial = serial.Serial('/dev/ttyAMA1', baudrate=9600, parity='N', timeout=0.001)  # when connect to GPIO pins (RX: GPIO 4 TX: GPIO 5)
     #GPS_serial = serial.Serial('COM5', baudrate=9600, parity='N', timeout=0.001)  # when connect to USB
 
     if GPS_serial.isOpen() == True:

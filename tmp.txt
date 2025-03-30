@@ -1,21 +1,40 @@
-can@raspberrypi:~/Desktop/2025_CANSAT_FSW $ pip install numpy
-error: externally-managed-environment
+can@raspberrypi:~/Desktop/2025_CANSAT_FSW $ /usr/bin/python /home/can/Desktop/2025_CANSAT_FSW/can_Common/can_GPS.py
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/dev/ttyAMA2'
 
-× This environment is externally managed
-╰─> To install Python packages system-wide, try apt install
-    python3-xyz, where xyz is the package you are trying to
-    install.
-    
-    If you wish to install a non-Debian-packaged Python package,
-    create a virtual environment using python3 -m venv path/to/venv.
-    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
-    sure you have python3-full installed.
-    
-    For more information visit http://rptl.io/venv
+During handling of the above exception, another exception occurred:
 
-note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
-hint: See PEP 668 for the detailed specification.#
+Traceback (most recent call last):
+  File "/home/can/Desktop/2025_CANSAT_FSW/can_Common/can_GPS.py", line 72, in <module>
+    GPS_Init()
+  File "/home/can/Desktop/2025_CANSAT_FSW/can_Common/can_GPS.py", line 19, in GPS_Init
+    GPS_serial = serial.Serial('/dev/ttyAMA2', baudrate=9600, parity='N', timeout=0.001)  # when connect to GPIO pins (RX: GPIO 4 TX: GPIO 5)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/usr/lib/python3/dist-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 2] could not open port /dev/ttyAMA2: [Errno 2] No such file or directory: '/dev/ttyAMA2'
+can@raspberrypi:~/Desktop/2025_CANSAT_FSW $ /usr/bin/python /home/can/Desktop/2025_CANSAT_FSW/can_Common/can_GPS.py
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/dev/ttyAMA1'
 
+During handling of the above exception, another exception occurred:
 
-
-temp txt
+Traceback (most recent call last):
+  File "/home/can/Desktop/2025_CANSAT_FSW/can_Common/can_GPS.py", line 72, in <module>
+    GPS_Init()
+  File "/home/can/Desktop/2025_CANSAT_FSW/can_Common/can_GPS.py", line 19, in GPS_Init
+    GPS_serial = serial.Serial('/dev/ttyAMA1', baudrate=9600, parity='N', timeout=0.001)  # when connect to GPIO pins (RX: GPIO 4 TX: GPIO 5)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/usr/lib/python3/dist-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 2] could not open port /dev/ttyAMA1: [Errno 2] No such file or directory: '/dev/ttyAMA1'
