@@ -1,7 +1,7 @@
 import serial
 import csv
 from queue import Queue
-import can_Common.can_BT
+#import can_Common.can_BT
 
 IMU_Rx_Queue = Queue()
 
@@ -15,7 +15,7 @@ global IMU_Data_Size
 
 global IMU_serial
 
-# IMU_serial = serial.Serial('COM3', 921600, stopbits=1, parity='N', timeout=0.001)
+# IMU_serial = serial.Serial('COM3', 115200, stopbits=1, parity='N', timeout=0.001)
 
 # ---------------------------------------------------- IMU Command ----------------------------------------------------
 
@@ -244,12 +244,12 @@ def IMU_Rx_Op():
     IMU_Buf = ""
     IMU_Rx_Data_Byte = ""
     IMU_Data_Size = 0
-
+    print("IMU_Rx_Op()") # Debugging
     while True:
         while IMU_serial.inWaiting():
 
             IMU_Raw_Data = IMU_serial.read()
-
+            print(IMU_Raw_Data)  # Debugging
             if IMU_Raw_Data != b'\r' and IMU_Raw_Data != b'\n':
                 IMU_Buf += str(IMU_Raw_Data)  # buffering
                 IMU_Buf = IMU_Buf.replace("'", "")  # remove (') and (b)
@@ -339,13 +339,13 @@ def IMU_Op(writer):
 
 if __name__ == "__main__":
 
-    # IMU_Init()
+    IMU_Init()
 
-    # while True:
-        # IMU_Op()
+    while True:
+        IMU_Op()
     # ----------------- For IMU Setting -----------------
-
-    IMU_reset()
+'''
+    IMU_reset() 
     IMU_Output_Rate_polling()
 
     IMU_Output_Code_ASCII()
@@ -357,4 +357,4 @@ if __name__ == "__main__":
     IMU_Set_Distance_Global()
 
     #IMU_921600()
-    
+    '''
