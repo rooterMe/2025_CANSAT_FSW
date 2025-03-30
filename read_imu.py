@@ -3,7 +3,7 @@ import time
 
 # EBIMU-9DOFV4 연결 포트 설정
 ser = serial.Serial(
-    port='/dev/ttyAMA0',      # 라즈베리파이의 UART 포트
+    port='/dev/ttyAMA2',      # 라즈베리파이의 UART 포트
     baudrate=115200,          # 기본 Baudrate
     timeout=1                 # 1초 타임아웃
 )

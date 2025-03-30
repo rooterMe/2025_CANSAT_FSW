@@ -16,7 +16,7 @@ def GPS_Init():
     global GPS_serial
     try:
         # GPS 시리얼 포트 초기화
-        GPS_serial = serial.Serial('/dev/ttyAMA2', baudrate=9600, parity='N', timeout=1)  # GPIO 핀 연결
+        GPS_serial = serial.Serial('/dev/ttyAMA5', baudrate=9600, parity='N', timeout=1)  # GPIO 핀 연결
         # GPS_serial = serial.Serial('/dev/ttyUSB0', baudrate=9600, parity='N', timeout=1)  # USB 연결
 
         if GPS_serial.isOpen():

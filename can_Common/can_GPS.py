@@ -72,8 +72,8 @@ if __name__ == "__main__":
     GPS_Init()
     print("GPS Init")
     path = "./"+f"Cansat_Log"
-    os.mkdir(path)
-    f = open(path+f'/gps_log.csv', 'w', newline='')
+    # os.mkdir(path)
+    f = open(path+f'/gps_log{time.time()}.csv', 'w', newline='')
     writer = csv.writer(f)
     while( True ):
         GPS_Op(writer)
