@@ -31,7 +31,7 @@ def GPS_Op(writer):
     global GPS_DATA
 
     # print(str(GPS_serial.read()))
-
+    #print(GPS_Buf)
     while GPS_serial.in_waiting:
         # print(GPS_serial.in_waiting)
 
