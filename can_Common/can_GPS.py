@@ -36,7 +36,7 @@ def GPS_Op(writer):
         # print(GPS_serial.in_waiting)
 
         GPS_Raw_data = str(GPS_serial.read()) 
-
+        print(GPS_Raw_data)
         GPS_Buf += GPS_Raw_data
         GPS_Buf = GPS_Buf.replace("'", "")
         GPS_Buf = GPS_Buf.replace("b", "")
@@ -71,8 +71,12 @@ def GPS_Op(writer):
 if __name__ == "__main__":
     GPS_Init()
     print("GPS Init")
+    path = "./"+f"Cansat_Log"
+    os.mkdir(path)
+    f = open(path+f'/gps_log.csv', 'w', newline='')
+    writer = csv.writer(f)
     while( True ):
-        GPS_Op()
+        GPS_Op(writer)
 
 
 
