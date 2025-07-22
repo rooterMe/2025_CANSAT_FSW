@@ -1,22 +1,28 @@
 import serial
 import time
 
-# EBIMU-9DOFV4 연결 포트 설정
+# Initialize serial port for EBIMU-9DOFV4
 ser = serial.Serial(
-    port='/dev/ttyAMA1',      # 라즈베리파이의 UART 포트
-    baudrate=115200,          # 기본 Baudrate
-    timeout=1                 # 1초 타임아웃
+    port='/dev/ttyAMA3',
+    baudrate=115200,
+    timeout=1
 )
 
-time.sleep(2)  # 시리얼 초기화 대기
+time.sleep(2)  # Wait for port to stabilize
+print("Connecting to EBIMU-9DOFV4...")
 
-print("EBIMU-9DOFV4 데이터 수신 시작...")
+# Example: Send initialization command to IMU
+# Replace this command according to your device's manual
+imu_init_cmd = "$VNWRG,07,40*5C\r\n"  # YPR output enable command with checksum
+ser.write(imu_init_cmd.encode('ascii'))
+print("IMU initialization command sent.")
 
+# Start receiving data
 try:
     while True:
         if ser.in_waiting:
             line = ser.readline().decode('utf-8', errors='ignore')
-            print(line.strip())  # 슬라이싱 없이 그대로 출력
+            print(line.strip())
 except KeyboardInterrupt:
-    print("종료됨.")
+    print("Program terminated by user.")
     ser.close()
