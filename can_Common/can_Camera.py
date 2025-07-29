@@ -1,6 +1,6 @@
 from picamera2 import Picamera2
 import can_Common.can_BT
-import can_Common.can_Time
+#import can_Common.can_Time
 from PIL import Image
 import io
 import base64
@@ -21,7 +21,7 @@ def Is_Camera_Image_File(filename):
 def Camera_SetUp(dirname):
     global picamera0
 
-    picamera0 = Picamera2(0)
+    picamera0 = Picamera2(1)
     picamera0.configure(picamera0.create_preview_configuration())
 
     # Create Camera_Image directory
@@ -45,7 +45,7 @@ def Cam0_Img_Cap(writer, path, name, Encode_Flag):
     except Exception as e:
         print(f"[Error] {name} Cam0_Error : {e}")
         writer.writerow(["Picture", "Camera0 Error", e])
-"""
+
 def Encoding_Thread_Worker(Q):
     while True:
         while not Q.empty():
@@ -59,8 +59,8 @@ def Encoding_Thread_Worker(Q):
             encoded_camera_data = base64.b64encode(resized_camera_data.getvalue())
 
             # BT Operation
-            ### can_Common.can_BT.Thread_Tx_Queue.put(f'&{str(index)}'.encode() + encoded_camera_data)
-"""
+            can_Common.can_BT.Thread_Tx_Queue.put(f'&{str(index)}'.encode() + encoded_camera_data)
+
 
 def Camera_Op(writer, path, name, Encode_Flag): 
     print(f"Camera Operation {path, name}")

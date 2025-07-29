@@ -3,7 +3,7 @@ from queue import Queue
 import csv
 import time
 import multiprocessing as mp
-import cs_Common.cs_Time
+#import can_Common.can_Time
 
 Rx_Queue = Queue()
 Tx_Queue = Queue()
@@ -210,7 +210,7 @@ def BT_Init_Set():  # BT Initial Setting / When First Connected
 
 
 def BT_Init():  # BT Init / When Turned On
-    BT_connect(230400)
+    BT_connect(115200)
     # BT_SCAN()
 
 
@@ -286,7 +286,7 @@ def BT_Rx_Op():  # BT Rx Operation
 
 if __name__ == "__main__":  # For Debug
 
-    BT_connect(921600)
+    BT_connect(115200)
 
     if BT_serial.is_open:
         print("BT OPEN")

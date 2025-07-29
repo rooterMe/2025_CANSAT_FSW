@@ -1,7 +1,7 @@
 import serial
 import csv
 from queue import Queue
-#import can_Common.can_BT
+import can_Common.can_BT
 
 IMU_Rx_Queue = Queue()
 
@@ -249,7 +249,7 @@ def IMU_Rx_Op():
         while IMU_serial.inWaiting():
 
             IMU_Raw_Data = IMU_serial.read()
-            print(IMU_Raw_Data)  # Debugging
+            #print(IMU_Raw_Data)  # Debugging
             if IMU_Raw_Data != b'\r' and IMU_Raw_Data != b'\n':
                 IMU_Buf += str(IMU_Raw_Data)  # buffering
                 IMU_Buf = IMU_Buf.replace("'", "")  # remove (') and (b)
@@ -321,12 +321,12 @@ def IMU_Op(writer):
     if IMU_Data:
 
         try:
-            # print(IMU_Data.split(','))
+            #print(IMU_Data.split(','))
             # a = ['IMU_DATA', *(list(map(str, IMU_Data.split(','))))]
             writer.writerow(["IMU_DATA", *map(lambda x: str(x), IMU_Data.split(','))])  # IMU Data Logging
 
             # BT Operation
-            ### can_Common.can_BT.Thread_Tx_Queue.put(IMU_Data.encode())
+            can_Common.can_BT.Thread_Tx_Queue.put(IMU_Data.encode())
 
             return IMU_Data
 
