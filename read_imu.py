@@ -4,7 +4,7 @@ import time
 # Initialize serial port for EBIMU-9DOFV4
 ser = serial.Serial(
     port='/dev/ttyAMA3',
-    baudrate=115200,
+    baudrate=921600,
     timeout=1
 )
 
