@@ -1,8 +1,8 @@
 import can_Common.can_Time
 import can_Common.can_Camera
 import can_Common.can_IMU 
-# import can_Common.can_BT
-# import can_Common.can_SD
+import can_Common.can_BT
+#import can_Common.can_SD
 import can_Common.can_GPS 
 import os
 import csv
@@ -13,13 +13,12 @@ writer = None
 path = None
 loop_cnt = 0
 
-"""
+
 def Life_Sign_Op():
-    nowtime = cs_Common.cs_Time.Time_Return()
+    nowtime = can_Common.can_Time.Time_Return()
     writer.writerow([nowtime])
 
-    cs_Common.cs_BT.Thread_Tx_Queue.put(b'%'+nowtime.encode())"
-    """
+    can_Common.can_BT.Thread_Tx_Queue.put(b'%'+nowtime.encode())
 
 def can_setup() :
     global writer,path
@@ -36,7 +35,7 @@ def can_setup() :
     can_Common.can_Camera.Camera_SetUp(path)
     can_Common.can_GPS.GPS_Init()
     can_Common.can_IMU.IMU_Init()
-    # can_Common.can_BT.BT_Init()
+    can_Common.can_BT.BT_Init()
 
 def can_loop():
     FrameRate = 30  # Setting Operation Cycle
@@ -51,7 +50,7 @@ def can_loop():
     else:
         Encode_Flag = False
 
-    # Life_Sign_Op()
+    Life_Sign_Op()
     print(f"loop cnt : {loop_cnt}, Encode : {Encode_Flag}")
     print(f"After Life Sign Op {can_Common.can_Time.Time_Return()}")
     can_Common.can_Camera.Camera_Op(writer, path,cur_time, Encode_Flag)
@@ -60,15 +59,15 @@ def can_loop():
     print(f"After GPS Op {can_Common.can_Time.Time_Return()}")
     can_Common.can_IMU.IMU_Op(writer)
     print(f"After IMU Op {can_Common.can_Time.Time_Return()}")
-    """
+    
     if can_Common.can_BT.BT_serial.in_waiting:
         USER_CMD = can_Common.cs_BT.BT_Rx_Op()
         if USER_CMD == "ERROR":
             print("BT Not Connected")
         else:
-            print(USER_CMD)"
+            print(USER_CMD)
     print(f"After BT Rx Op {can_Common.can_Time.Time_Return()}")
-    """
+    
     
     while time.time_ns() - startTime < 1000000000 / FrameRate:
         True
@@ -78,16 +77,17 @@ def can_loop():
 if __name__ == "__main__":
     print("OPERATION START")
     can_setup()
-
-    # process_Tx = mp.Process(target=can_Common.can_BT.BT_Tx_Thread_Worker,args=(can_Common.can_BT.Thread_Tx_Queue,))
+    print("1")
+    process_Tx = mp.Process(target=can_Common.can_BT.BT_Tx_Thread_Worker,args=(can_Common.can_BT.Thread_Tx_Queue,))
     process_Ec = mp.Process(target=can_Common.can_Camera.Encoding_Thread_Worker,args=(can_Common.can_Camera.Thread_Encoding_Queue,))
-    # process_Tx.start()
+    print("2")
+    process_Tx.start()
     process_Ec.start()
-
-    # while can_Common.can_BT.BT_Rx_Op()[0:7] != "CONNECT": # This chekcs connection with GS
-    #     print("Waiting for connection...")
-    #     time.sleep(1)
-    # print("Connected to GS")
+    print("3")
+    while can_Common.can_BT.BT_Rx_Op()[0:7] != "CONNECT": # This chekcs connection with GS
+        print("Waiting for connection...")
+        time.sleep(1)
+    print("Connected to GS")
 
     while True:
         can_loop()
