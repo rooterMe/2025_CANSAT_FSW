@@ -61,7 +61,7 @@ def can_loop():
     print(f"After IMU Op {can_Common.can_Time.Time_Return()}")
     
     if can_Common.can_BT.BT_serial.in_waiting:
-        USER_CMD = can_Common.cs_BT.BT_Rx_Op()
+        USER_CMD = can_Common.can_BT.BT_Rx_Op()
         if USER_CMD == "ERROR":
             print("BT Not Connected")
         else:

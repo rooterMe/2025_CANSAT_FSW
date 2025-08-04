@@ -21,7 +21,7 @@ def Is_Camera_Image_File(filename):
 def Camera_SetUp(dirname):
     global picamera0
 
-    picamera0 = Picamera2(1)
+    picamera0 = Picamera2()
     picamera0.configure(picamera0.create_preview_configuration())
 
     # Create Camera_Image directory
