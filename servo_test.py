@@ -1,51 +1,55 @@
-import gpiod
-import time
+import RPi.GPIO as GPIO #RPi.GPIO 라이브러리를 GPIO로 사용
+from time import sleep  #time 라이브러리의 sleep함수 사용
 
-# GPIO 칩 및 라인 설정
-CHIP_NAME     = 'gpiochip0'
-SERVO_OFFSET  = 21      # BCM 21 → 물리 핀 40
-PWM_FREQUENCY = 50      # 50Hz
-PERIOD_SEC    = 1.0 / PWM_FREQUENCY  # 20ms
+servoPin          = 12   # 서보 핀
+SERVO_MAX_DUTY    = 12   # 서보의 최대(180도) 위치의 주기
+SERVO_MIN_DUTY    = 3    # 서보의 최소(0도) 위치의 주기
 
-# gpiod 라인 요청
-chip = gpiod.Chip(CHIP_NAME)
-servo_line = chip.get_line(SERVO_OFFSET)
-servo_line.request(consumer="Servo", type=gpiod.LINE_REQ_DIR_OUT, default_vals=[0])
+GPIO.setmode(GPIO.BOARD)        # GPIO 설정
+GPIO.setup(servoPin, GPIO.OUT)  # 서보핀 출력으로 설정
 
-def servo_move(angle: float, duration: float):
-    """
-    서보모터를 지정한 각도로 이동시킵니다.
-    :param angle: 0~180 (도)
-    :param duration: 이동 유지 시간 (초)
-    """
-    # 각도를 펄스 폭으로 변환 (1ms @0°, 2ms @180°)
-    pulse_width = 0.001 + (angle / 180.0) * 0.001  # 1ms + angle*(1ms/180)
-    off_time = PERIOD_SEC - pulse_width
+servo = GPIO.PWM(servoPin, 50)  # 서보핀을 PWM 모드 50Hz로 사용하기 (50Hz > 20ms)
+servo.start(0)  # 서보 PWM 시작 duty = 0, duty가 0이면 서보는 동작하지 않는다.
 
-    end_time = time.time() + duration
-    while time.time() < end_time:
-        servo_line.set_value(1)
-        time.sleep(pulse_width)
-        servo_line.set_value(0)
-        time.sleep(off_time)
 
-if __name__ == "__main__":
-    try:
-        print("서보모터 테스트 시작합니다.")
-        # 0°, 90°, 180° 위치로 각각 2초간 이동
-        print("→ 0°")
-        servo_move(0, 2.0)
-        print("→ 90°")
-        servo_move(90, 2.0)
-        print("→ 180°")
-        servo_move(180, 2.0)
-        print("→ 90°")
-        servo_move(90, 2.0)
+'''
+서보 위치 제어 함수
+degree에 각도를 입력하면 duty로 변환후 서보 제어(ChangeDutyCycle)
+'''
+def setServoPos(degree):
+  # 각도는 180도를 넘을 수 없다.
+  if degree > 180:
+    degree = 180
 
-    except KeyboardInterrupt:
-        print("테스트 중단합니다.")
-    finally:
-        servo_line.set_value(0)
-        servo_line.release()
-        chip.close()
-        print("GPIO 정리 완료하였습니다.")
+  # 각도(degree)를 duty로 변경한다.
+  duty = SERVO_MIN_DUTY+(degree*(SERVO_MAX_DUTY-SERVO_MIN_DUTY)/180.0)
+  # duty 값 출력
+  print("Degree: {} to {}(Duty)".format(degree, duty))
+
+  # 변경된 duty값을 서보 pwm에 적용
+  servo.ChangeDutyCycle(duty)
+
+
+if __name__ == "__main__":  
+  # 서보 0도에 위치
+  setServoPos(0)
+  sleep(1) # 1초 대기
+  # 90도에 위치
+  setServoPos(90)
+  sleep(1)
+  # 50도..
+  setServoPos(50)
+  sleep(1)
+
+  # 120도..
+  setServoPos(120)
+  sleep(1)
+
+  # 180도에 위치
+  setServoPos(180)
+  sleep(1)
+
+  # 서보 PWM 정지
+  servo.stop()
+  # GPIO 모드 초기화
+  GPIO.cleanup()
