@@ -47,6 +47,14 @@ def BT_921600():  # Set BT Baud Rate 921600 and Reconnect BT
 
     BT_ATZ()
 
+def BT_230400():  # Set BT Baud Rate 230400 and Reconnect BT
+    print("BT 230400")
+    BT_serial.write(b'AT+UARTCONFIG,230400,N,1,0\r\n')
+    BT_Rx_Op()
+
+    BT_Port_Speed_Set(230400)
+
+    BT_ATZ()
 
 def BT_115200():  # Set BT Baud Rate 115200 and Reconnect BT
     print("BT 115200")
