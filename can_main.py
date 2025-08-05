@@ -60,6 +60,7 @@ def can_setup() :
     can_Common.can_GPS.GPS_Init()
     can_Common.can_IMU.IMU_Init()
     can_Common.can_BT.BT_Init()
+    can_Common.can_Motor.Motor_Init()
 
 def can_loop():
     FrameRate = 30  # Setting Operation Cycle
@@ -108,6 +109,8 @@ def can_loop():
 
     if wing:
         can_Common.can_Servo.open_wing()
+        Left = 0
+        Right = 0
         pre_time = time.time()
         wing = False
 
