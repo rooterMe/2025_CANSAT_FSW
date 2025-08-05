@@ -1,5 +1,6 @@
 import math
 
+
 def calculate_bearing(lat, lon, lat0, lon0):
     phi1 = math.radians(lat)
     phi2 = math.radians(lat0)
@@ -44,10 +45,10 @@ def control_to_target(lat, lon, lat0, lon0, vx, vy, vz):
 if __name__ == "__main__":
     lat = 3635.5 / 100
     lon = 12734.5 / 100
-    lat0 = 3635.6 / 100
-    lon0 = 12734.6 / 100
+    lat0 = 3635.5 / 100
+    lon0 = 12734.5 / 100
     vx, vy, vz = 1.0, 1.0, -0.1
-
+    print(lat0 == lat)
     command = control_to_target(lat, lon, lat0, lon0, vx, vy, vz)
     # command == -1 → turn left, 0 → maintain heading, 1 → turn right
     print(command)
