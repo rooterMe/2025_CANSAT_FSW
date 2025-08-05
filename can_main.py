@@ -97,7 +97,7 @@ def can_loop():
         Lat, Lon, Alt = Lat_c, Lon_c, Alt_c
     IMU_data = can_Common.can_IMU.IMU_Op(writer)
     if IMU_data is not None:
-        v_x, v_y, v_z = IMU_data[4], IMU_data[5], IMU_data[6]
+        v_x, v_y, v_z = float(IMU_data[4]), float(IMU_data[5]), float(IMU_data[6])
     print(f"After IMU Op {can_Common.can_Time.Time_Return()}")
     
     print("***************************")
