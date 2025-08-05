@@ -52,7 +52,7 @@ def GPS_Op(writer):
 
                 print(GPS_DATA.split(','))
                 a = GPS_DATA.split(',')
-                Lat, Lon, Alt = a[1], a[3], a[9]
+                Lat, Lon, Alt = a[2], a[4], a[9]
                 writer.writerow(["GPS_DATA", *map(lambda x: str(x), GPS_DATA.split(','))])
 
                 # BT Operation

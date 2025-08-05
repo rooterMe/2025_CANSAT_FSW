@@ -4,7 +4,6 @@ import can_Common.can_IMU
 import can_Common.can_BT
 #import can_Common.can_SD
 import can_Common.can_GPS 
-import can_Common.can_Light
 import can_Common.can_Servo
 import can_Common.can_Targeting
 import can_Common.can_Motor
@@ -31,9 +30,10 @@ v_x = 0
 v_y = 0
 v_z = 0
 
+servo = None
 wing = False
 pre_time = None
-light_cnt = 0
+alt_cnt = 0
 
 Left = -1
 Right = -1
@@ -45,7 +45,7 @@ def Life_Sign_Op():
     can_Common.can_BT.Thread_Tx_Queue.put(b'%'+nowtime.encode())
 
 def can_setup() :
-    global writer,path
+    global writer,path,servo
     print("CANSAT Setup")
 
     cur_time = can_Common.can_Time.Time_Return_second()
@@ -62,6 +62,12 @@ def can_setup() :
     can_Common.can_BT.BT_Init()
     can_Common.can_Motor.Motor_Init()
 
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(32, GPIO.OUT)
+    servo = GPIO.PWM(32, 50)
+    servo.start(0)
+    can_Common.can_Servo.setServoPos(servo, 0)
+
 def can_loop():
     FrameRate = 30  # Setting Operation Cycle
 
@@ -77,6 +83,7 @@ def can_loop():
 
     global Lat, Lon, Alt, Lat0, Lon0, Alt0, v_x, v_y, v_z
     global Left, Right
+    global wing, pre_time, servo
 
     Life_Sign_Op()
     print(f"loop cnt : {loop_cnt}, Encode : {Encode_Flag}")
@@ -95,6 +102,16 @@ def can_loop():
         if Lat0 == -1 and Lon0 == -1 and Alt0 == -1:
             Lat0, Lon0, Alt0 = Lat_c, Lon_c, Alt_c
         Lat, Lon, Alt = Lat_c, Lon_c, Alt_c
+    
+    if Alt_c is not None and Alt0 != -1:
+        if Alt_c > Alt0 + 50.0:
+            alt_cnt += 1
+        else:
+            alt_cnt = 0
+
+    if alt_cnt > 10:
+        wing = True
+
     IMU_data = can_Common.can_IMU.IMU_Op(writer)
     if IMU_data is not None:
         v_x, v_y, v_z = float(IMU_data[4]), float(IMU_data[5]), float(IMU_data[6])
@@ -105,10 +122,13 @@ def can_loop():
     print(f"v_x : {v_x}, v_y : {v_y}, v_z : {v_z}")
     print("***************************")
 
-    global wing, pre_time
+    
 
     if wing:
-        can_Common.can_Servo.open_wing()
+        can_Common.can_Servo.setServoPos(servo, 90)
+        servo.stop()
+        GPIO.cleanup()
+        can_Common.can_Motor.change_wing(writer, 0-Left, 0-Right)
         Left = 0
         Right = 0
         pre_time = time.time()
@@ -118,17 +138,17 @@ def can_loop():
         if Lat0 != -1 and Lon0 != -1 and Lat0 != Lat and Lon0 != Lon:
             ans = can_Common.can_Targeting.control_to_target(Lat, Lon, Lat0, Lon0, v_x, v_y, v_z)
             if ans == -1:
-                can_Common.can_Motor.change_wing(writer, 0-Left, 1-Right)
-                Left = 0
-                Right = 1
-            elif ans == 0:
-                can_Common.can_Motor.change_wing(writer, 1-Left, 1-Right)
-                Left = 1
-                Right = 1
-            elif ans == 1:
-                can_Common.can_Motor.change_wing(writer, 1-Left, 0-Right)
-                Left = 1
+                can_Common.can_Motor.change_wing(writer, -1-Left, 0-Right)
+                Left = -1
                 Right = 0
+            elif ans == 0:
+                can_Common.can_Motor.change_wing(writer, 0-Left, 0-Right)
+                Left = 0
+                Right = 0
+            elif ans == 1:
+                can_Common.can_Motor.change_wing(writer, 0-Left, -1-Right)
+                Left = 0
+                Right = -1
 
 
     if can_Common.can_BT.BT_serial.in_waiting:
@@ -140,19 +160,19 @@ def can_loop():
             wing = True
             can_Common.can_BT.Thread_Tx_Queue.put(b'WINGOPENok')
         elif USER_CMD == "TURNLEFT":
-            can_Common.can_Motor.change_wing(writer, 0-Left, 1-Right)
-            Left = 0
-            Right = 1
+            can_Common.can_Motor.change_wing(writer, -1-Left, 0-Right)
+            Left = -1
+            Right = 0
             can_Common.can_BT.Thread_Tx_Queue.put(b'TURNLEFTok')
         elif USER_CMD == "TURNRIGHT":
-            can_Common.can_Motor.change_wing(writer, 1-Left, 0-Right)
-            Left = 1
-            Right = 0
+            can_Common.can_Motor.change_wing(writer, 0-Left, -1-Right)
+            Left = 0
+            Right = -1
             can_Common.can_BT.Thread_Tx_Queue.put(b'TURNRIGHTok')
         elif USER_CMD == "MAINTAIN":
-            can_Common.can_Motor.change_wing(writer, 1-Left, 1-Right)
-            Left = 1
-            Right = 1
+            can_Common.can_Motor.change_wing(writer, 0-Left, 0-Right)
+            Left = 0
+            Right = 0
             can_Common.can_BT.Thread_Tx_Queue.put(b'MAINTAINok')
         else:
             print(USER_CMD)
