@@ -141,18 +141,18 @@ def can_loop():
             can_Common.can_BT.Thread_Tx_Queue.put(b'WINGOPENok')
         elif USER_CMD == "TURNLEFT":
             can_Common.can_Motor.change_wing(writer, 0-Left, 1-Right)
-            Left = 0-Left
-            Right = 1-Right
+            Left = 0
+            Right = 1
             can_Common.can_BT.Thread_Tx_Queue.put(b'TURNLEFTok')
         elif USER_CMD == "TURNRIGHT":
             can_Common.can_Motor.change_wing(writer, 1-Left, 0-Right)
-            Left = 1-Left
-            Right = 0-Right
+            Left = 1
+            Right = 0
             can_Common.can_BT.Thread_Tx_Queue.put(b'TURNRIGHTok')
         elif USER_CMD == "MAINTAIN":
             can_Common.can_Motor.change_wing(writer, 1-Left, 1-Right)
-            Left = 1-Left
-            Right = 1-Right
+            Left = 1
+            Right = 1
             can_Common.can_BT.Thread_Tx_Queue.put(b'MAINTAINok')
         else:
             print(USER_CMD)
