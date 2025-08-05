@@ -34,89 +34,21 @@ IMU 센서 값에 따른 상승타 각도 제어
 
 IMU, GPS 등 센서값 데이터 수집 (CSV 파일 제작 코드 필요)
 
-[임시] IMU 값에 따른 상승타 모터 제어 코드 필요
+GPS에 따라서 turn left, right 하는 코드
+ㄴ> 현재 상태에 따라 모터를 직접적으로 작동시키는 코드 (can_Motor.py)
 
-IMU 값 Roll, Pitch, Yaw만 출력됨 (가속도, 자이로 출력 안됨, 수정 필요)
+조도센서에 따라서 서보모터 작동시키는 코드 (can_Light.py) X
 
-(New!)전압센서 -> 베터리 전압, 전류
+조도센서 안쓰고 GPS 고도에 따라서 서보모터 작동시키도록
++) User CMD로 WINGOPEN보내고 지상국코드
++) WINGOPEN 받고 FSW 캔위성 코드
 
-(New!)기압계 -> 고도 교차검증
 
-### 인공지능
+서보모터 코드 (can_Servo.py)
+시작 state를 각각 -1,-1로 두어서 승강타 펴지면 0,0까지 올리도록 자동 세팅 코드
 
-### 지상국
+처음 GPS 신호 잡힌곳을 Lat0, Lon0로 설정
 
-(New!)코드 응답속도 비교
+can_light, servo, motor 등 추가된 코드에 대해 멀티프로세싱? 쓰레드? 어떻게 해야하는가
 
-(New!)스레딩 -> 멀티프로세싱 (코어 분리)
-
-(New!)통신모듈 2개? 관측자료/ 텔레메트리, 비콘신호 분리
-
-CBSH@raspberrypi:~/Desktop/cansat 2025 v2 $ pip3 install rpi-lgpio
-error: externally-managed-environment
-
-× This environment is externally managed
-╰─> To install Python packages system-wide, try apt install
-    python3-xyz, where xyz is the package you are trying to
-    install.
-    
-    If you wish to install a non-Debian-packaged Python package,
-    create a virtual environment using python3 -m venv path/to/venv.
-    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
-    sure you have python3-full installed.
-    
-    For more information visit http://rptl.io/venv
-
-note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
-hint: See PEP 668 for the detailed specification.
-CBSH@raspberrypi:~/Desktop/cansat 2025 v2 $ pip install rpi-lgpio
-error: externally-managed-environment
-
-× This environment is externally managed
-╰─> To install Python packages system-wide, try apt install
-    python3-xyz, where xyz is the package you are trying to
-    install.
-    
-    If you wish to install a non-Debian-packaged Python package,
-    create a virtual environment using python3 -m venv path/to/venv.
-    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
-    sure you have python3-full installed.
-    
-    For more information visit http://rptl.io/venv
-
-note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
-hint: See PEP 668 for the detailed specification.
-CBSH@raspberrypi:~/Desktop/cansat 2025 v2 $ pip uninstall RPi.GPIO
-error: externally-managed-environment
-
-× This environment is externally managed
-╰─> To install Python packages system-wide, try apt install
-    python3-xyz, where xyz is the package you are trying to
-    install.
-    
-    If you wish to install a non-Debian-packaged Python package,
-    create a virtual environment using python3 -m venv path/to/venv.
-    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
-    sure you have python3-full installed.
-    
-    For more information visit http://rptl.io/venv
-
-note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
-hint: See PEP 668 for the detailed specification.
-CBSH@raspberrypi:~/Desktop/cansat 2025 v2 $ pip install rpi-lgpio
-error: externally-managed-environment
-
-× This environment is externally managed
-╰─> To install Python packages system-wide, try apt install
-    python3-xyz, where xyz is the package you are trying to
-    install.
-    
-    If you wish to install a non-Debian-packaged Python package,
-    create a virtual environment using python3 -m venv path/to/venv.
-    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
-    sure you have python3-full installed.
-    
-    For more information visit http://rptl.io/venv
-
-note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
-hint: See PEP 668 for the detailed specification.
+라즈베리파이 배터리 5.25V 정도로 조절하기

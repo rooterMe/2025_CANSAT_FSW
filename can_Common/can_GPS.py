@@ -16,7 +16,7 @@ GPS_serial = None
 
 def GPS_Init() :
     global GPS_serial
-    GPS_serial = serial.Serial('/dev/ttyAMA4', baudrate=9600, parity='N', timeout=0.001)  # when connect to GPIO pins (RX: GPIO 4 TX: GPIO 5)
+    GPS_serial = serial.Serial('/dev/ttyAMA2', baudrate=9600, parity='N', timeout=0.001)  # when connect to GPIO pins (RX: GPIO 4 TX: GPIO 5)
     #GPS_serial = serial.Serial('COM5', baudrate=9600, parity='N', timeout=0.001)  # when connect to USB
 
     if GPS_serial.isOpen() == True:
@@ -51,18 +51,18 @@ def GPS_Op(writer):
             if GPS_DATA[0:6] == "$GPGGA":  # 원하는 데이터 형식 수신시 처리
 
                 print(GPS_DATA.split(','))
-                # a = ['GPS_DATA',*(list(map(float,GPS_DATA.split(','))))]
+                a = list(map(float,GPS_DATA.split(',')))
                 writer.writerow(["GPS_DATA", *map(lambda x: str(x), GPS_DATA.split(','))])
 
                 # BT Operation
-                
+                Lat, Lon, Alt = a[1], a[3], a[9]
                 can_Common.can_BT.Thread_Tx_Queue.put(GPS_DATA.encode())
 
                 GPS_DATA = ""
-                return
+                return Lat, Lon, Alt  # return GPS DATA
             
             GPS_DATA = ""
-            # return -1 # no GPS DATA
+            return None, None, None # no GPS DATA
 
         GPS_DATA += GPS_Buf
         GPS_Buf = ""
