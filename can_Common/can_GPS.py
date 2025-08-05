@@ -51,11 +51,12 @@ def GPS_Op(writer):
             if GPS_DATA[0:6] == "$GPGGA":  # 원하는 데이터 형식 수신시 처리
 
                 print(GPS_DATA.split(','))
-                a = list(map(float,GPS_DATA.split(',')))
+                a = GPS_DATA.split(',')
+                Lat, Lon, Alt = float(a[1]), float(a[3]), float(a[9])
                 writer.writerow(["GPS_DATA", *map(lambda x: str(x), GPS_DATA.split(','))])
 
                 # BT Operation
-                Lat, Lon, Alt = a[1], a[3], a[9]
+                #Lat, Lon, Alt = a[1], a[3], a[9]
                 can_Common.can_BT.Thread_Tx_Queue.put(GPS_DATA.encode())
 
                 GPS_DATA = ""
