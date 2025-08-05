@@ -119,16 +119,16 @@ def can_loop():
             ans = can_Common.can_Targeting.control_to_target(Lat, Lon, Lat0, Lon0, v_x, v_y, v_z)
             if ans == -1:
                 can_Common.can_Motor.change_wing(writer, 0-Left, 1-Right)
-                Left = 0-Left
-                Right = 1-Right
+                Left = 0
+                Right = 1
             elif ans == 0:
                 can_Common.can_Motor.change_wing(writer, 1-Left, 1-Right)
-                Left = 1-Left
-                Right = 1-Right
+                Left = 1
+                Right = 1
             elif ans == 1:
                 can_Common.can_Motor.change_wing(writer, 1-Left, 0-Right)
-                Left = 1-Left
-                Right = 0-Right
+                Left = 1
+                Right = 0
 
 
     if can_Common.can_BT.BT_serial.in_waiting:
