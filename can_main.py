@@ -82,7 +82,13 @@ def can_loop():
     print(f"After Life Sign Op {can_Common.can_Time.Time_Return()}")
     can_Common.can_Camera.Camera_Op(writer, path,cur_time, Encode_Flag)
     print(f"After Camera Op {can_Common.can_Time.Time_Return()}")
-    Lat_c, Lon_c, Alt_c = can_Common.can_GPS.GPS_Op(writer)
+
+    res = can_Common.can_GPS.GPS_Op(writer)
+    if res is not None:
+        Lat_c, Lon_c, Alt_c = res
+    else:
+        Lat_c, Lon_c, Alt_c = None, None, None
+    #Lat_c, Lon_c, Alt_c = can_Common.can_GPS.GPS_Op(writer)
     print(f"After GPS Op {can_Common.can_Time.Time_Return()}")
     if Lat_c is not None and Lon_c is not None and Alt_c is not None:
         if Lat0 == -1 and Lon0 == -1 and Alt0 == -1:

@@ -70,6 +70,7 @@ def GPS_Op(writer):
 
         GPS_DATA += GPS_Buf
         GPS_Buf = ""
+    return None, None, None  # no GPS DATA
 
 
 if __name__ == "__main__":

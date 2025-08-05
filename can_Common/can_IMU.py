@@ -328,7 +328,7 @@ def IMU_Op(writer):
             # BT Operation
             can_Common.can_BT.Thread_Tx_Queue.put(IMU_Data.encode())
 
-            return IMU_Data
+            return IMU_Data[1:].split(',')
 
         except:
             print(IMU_Data)
