@@ -109,18 +109,22 @@ def can_loop():
     if wing:
         can_Common.can_Servo.open_wing()
         pre_time = time.time()
+        wing = False
 
-    if wing and pre_time is not None and (time.time() - pre_time) > 5:
+    if not wing and pre_time is not None and (time.time() - pre_time) > 5:
         ans = can_Common.can_Targeting.control_to_target(Lat, Lon, Lat0, Lon0, v_x, v_y, v_z)
         if ans == -1:
             can_Common.can_Motor.change_wing(writer, 0-Left, 1-Right)
+            Left = 0-Left
+            Right = 1-Right
         elif ans == 0:
             can_Common.can_Motor.change_wing(writer, 1-Left, 1-Right)
+            Left = 1-Left
+            Right = 1-Right
         elif ans == 1:
             can_Common.can_Motor.change_wing(writer, 1-Left, 0-Right)
-    
-    if not wing:
-        pre_time = None
+            Left = 1-Left
+            Right = 0-Right
 
 
     if can_Common.can_BT.BT_serial.in_waiting:
@@ -128,9 +132,24 @@ def can_loop():
         if USER_CMD == "ERROR":
             print("BT Not Connected")
         elif USER_CMD == "WINGOPEN":
-            global wing
+            #global wing
             wing = True
-            can_Common.can_BT.Thread_Tx_Queue.put(b'WINGOPENOK')
+            can_Common.can_BT.Thread_Tx_Queue.put(b'WINGOPENok')
+        elif USER_CMD == "TURNLEFT":
+            can_Common.can_Motor.change_wing(writer, 0-Left, 1-Right)
+            Left = 0-Left
+            Right = 1-Right
+            can_Common.can_BT.Thread_Tx_Queue.put(b'TURNLEFTok')
+        elif USER_CMD == "TURNRIGHT":
+            can_Common.can_Motor.change_wing(writer, 1-Left, 0-Right)
+            Left = 1-Left
+            Right = 0-Right
+            can_Common.can_BT.Thread_Tx_Queue.put(b'TURNRIGHTok')
+        elif USER_CMD == "MAINTAIN":
+            can_Common.can_Motor.change_wing(writer, 1-Left, 1-Right)
+            Left = 1-Left
+            Right = 1-Right
+            can_Common.can_BT.Thread_Tx_Queue.put(b'MAINTAINok')
         else:
             print(USER_CMD)
     print(f"After BT Rx Op {can_Common.can_Time.Time_Return()}")

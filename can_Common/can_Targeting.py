@@ -32,10 +32,13 @@ def control_to_target(lat, lon, lat0, lon0, vx, vy, vz):
     elif relative_angle < -180:
         relative_angle += 360
     if -180 <= relative_angle <= -20:
+        print("Turn Left")
         return -1
     elif 20 <= relative_angle <= 180:
+        print("Turn Right")
         return 1
     else:
+        print("Maintain Heading")
         return 0
 
 if __name__ == "__main__":
