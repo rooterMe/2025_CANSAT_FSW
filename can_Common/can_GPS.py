@@ -52,7 +52,7 @@ def GPS_Op(writer):
 
                 print(GPS_DATA.split(','))
                 a = GPS_DATA.split(',')
-                Lat, Lon, Alt = float(a[1]), float(a[3]), float(a[9])
+                Lat, Lon, Alt = a[1], a[3], a[9]
                 writer.writerow(["GPS_DATA", *map(lambda x: str(x), GPS_DATA.split(','))])
 
                 # BT Operation
@@ -60,8 +60,11 @@ def GPS_Op(writer):
                 can_Common.can_BT.Thread_Tx_Queue.put(GPS_DATA.encode())
 
                 GPS_DATA = ""
-                return Lat, Lon, Alt  # return GPS DATA
-            
+                if Lat == '' or Lon == '' or Alt == '':
+                    return None, None, None
+                else:
+                    return float(Lat), float(Lon), float(Alt)  # return GPS DATA
+
             GPS_DATA = ""
             return None, None, None # no GPS DATA
 
