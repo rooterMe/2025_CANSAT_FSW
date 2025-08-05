@@ -111,6 +111,7 @@ def can_loop():
 
     if alt_cnt > 10:
         wing = True
+        can_Common.can_BT.Thread_Tx_Queue.put(b'WINGOPENokbyGPS')
 
     IMU_data = can_Common.can_IMU.IMU_Op(writer)
     if IMU_data is not None:
