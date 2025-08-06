@@ -84,6 +84,7 @@ def can_loop():
     global Lat, Lon, Alt, Lat0, Lon0, Alt0, v_x, v_y, v_z
     global Left, Right
     global wing, pre_time, servo
+    global alt_cnt
 
     Life_Sign_Op()
     print(f"loop cnt : {loop_cnt}, Encode : {Encode_Flag}")
