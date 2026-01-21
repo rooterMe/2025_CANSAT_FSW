@@ -2,6 +2,9 @@ import can_Common.can_BT
 import time
 import csv
 
+#########################################################
+# This file is for our project only. You don't need it. #
+#########################################################
 
 def MOTOR_csv(writer, motor, side, direction):
     """
