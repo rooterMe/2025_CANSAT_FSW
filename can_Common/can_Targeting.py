@@ -1,5 +1,8 @@
 import math
 
+#########################################################
+# This file is for our project only. You don't need it. #
+#########################################################
 
 def calculate_bearing(lat, lon, lat0, lon0):
     phi1 = math.radians(lat)
