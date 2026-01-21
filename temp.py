@@ -1,6 +1,10 @@
 import serial
 import time
 
+#################################
+# This file is for testing only.#
+#################################
+
 # EBIMU �ʱ� �ӵ��� ���� ��Ʈ ���� (921600bps)
 ser = serial.Serial(
     port='/dev/ttyAMA3',
