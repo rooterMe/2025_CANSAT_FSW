@@ -1,3 +1,7 @@
+#################################
+# This file is for testing only.#
+#################################
+
 import serial
 import csv
 from queue import Queue
