@@ -2,8 +2,9 @@ import can_Common.can_BT
 import RPi.GPIO as GPIO
 import time
 
-
-
+#########################################################
+# This file is for our project only. You don't need it. #
+#########################################################
 
 def setServoPos(servo, degree):
   # 각도는 180도를 넘을 수 없다.
