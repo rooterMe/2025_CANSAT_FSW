@@ -1,6 +1,10 @@
 import gpiod
 import time
 
+#########################################################
+# This file is for our project only. You don't need it. #
+#########################################################
+
 # GPIO 칩 및 모터 제어 라인 offset 정의
 CHIP_NAME = 'gpiochip0'
 IN1_OFFSET = 17  # 물리 핀 11 → 모터 A IN1
