@@ -1,5 +1,14 @@
 # 2025_CANSAT_FSW
 
+> FLight Software Program for 2025 CANSAT Competition Korea
+> 
+> These files are used on the Raspberry Pi.
+> 
+> If you want to see about AI of this project, visit [this link](https://github.com/rooterMe/2025_CANSAT_AI)
+>
+> If you want to see about Ground Station Program of this project, visit [this link](https://github.com/rooterMe/2025_CANSAT_GS)
+
+<!--
 2025년 캔위성 경연대회 FSW
 
 ## 원하는 목표로 낙하하는 캔위성 개발 (주제명 미정, 팀 이름 미정)
@@ -52,3 +61,5 @@ GPS에 따라서 turn left, right 하는 코드
 can_light, servo, motor 등 추가된 코드에 대해 멀티프로세싱? 쓰레드? 어떻게 해야하는가
 
 라즈베리파이 배터리 5.25V 정도로 조절하기
+
+-->
