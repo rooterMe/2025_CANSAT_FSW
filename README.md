@@ -7,59 +7,50 @@
 > If you want to see about AI of this project, visit [this link](https://github.com/rooterMe/2025_CANSAT_AI)
 >
 > If you want to see about Ground Station Program of this project, visit [this link](https://github.com/rooterMe/2025_CANSAT_GS)
+>
+> by [Kangmin Ra](https://github.com/rooterMe)(35th), [Cheolsoon Han](https://github.com/cheolsoon1234)(34th)
+
+2025년 캔위성 대회에서 사용했던 FSW입니다. 2025년에는 대회측에서 제공해주는 캔위성 키트를 사용하지 않고, 라즈베리파이 기반에 캔위성을 직접 설계 및 제작해 사용했습니다. 라즈베리파이 내 VS Code에서 실행하여 사용할 수 있습니다. 캔위성 및 프로그램 코드 관련해서 문의가 있으면 rooterme@kaist.ac.kr로 문의 바랍니다.
+
+# Code Overview
+
+## `can_main_v0.py`
+
+라즈베리파이 내의 VSC에서 can_main 파일을 실행하여 작동시킵니다. can_Common 폴더의 다른 파일들을 호출하며 실행합니다.
+
+이 repository에 v0~3까지 있는데 v0를 보시면 됩니다. 다른 버전은 2025년 대회를 위한 코드가 추가되어있습니다.
+
+```python
+    while can_Common.can_BT.BT_Rx_Op()[0:7] != "CONNECT": # This chekcs connection with GS
+        print("Waiting for connection...")
+        time.sleep(1)
+    print("Connected to GS")
+
+    while True:
+        can_loop()
+```
+
+캔위성의 BT센서와 연결되면 CONNECT 신호를 받습니다. `can_main` 코드 실행 후 BT 연결이 확인되면 **can_loop**가 돌아갑니다.
+
+**can_loop** 에서는 카메라, GPS, IMU, BT 등의 센서를 호출하고 작동을 확인합니다.
+
+## `can_Common`
+
+`can_Common` 폴더에는 GPS, IMU 등 세부적인 센서에 대한 코드들이 포함되어있습니다. `can_main`에서 이 파일 내의 코드들을 사용합니다.
+
+이 폴더의 파일 중 `can_BT.py`, `can_Camera.py`, `can_GPS.py`, `can_IMU.py`, `can_Time.py` 만 보시면 됩니다. 다른 파일들은 2025년 임무를 위한 추가적인 코드입니다. 
+
+### `can_BT.py`
+
+**BT_Rx_Op** 가 실행되는 함수 부분입니다. BT 센서가 읽은 데이터들을 **BT_Buf**에 저장해 Q로 반환합니다.
+
+파일 내 다양한 함수가 있습니다. Baudrate 설정 등 명령어를 보낼 수 있도록 간편화 해두었습니다. 함수의 역할은 각 함수별로 주석이 적혀있습니다. 추가적인 명령어 관련은 Cansat 대회측에서 제공하는 자료나 BT 센서 메뉴얼을 직접 찾아보시면 됩니다. 
+
+이 파일은 직접 실행하지 않고 main에서 호출되어 사용합니다. 디버깅을 위해 직접 실행하실 수 있습니다.
+
+### `can_Camera`
+
 
 <!--
-2025년 캔위성 경연대회 FSW
-
-## 원하는 목표로 낙하하는 캔위성 개발 (주제명 미정, 팀 이름 미정)
-
-### 캔위성 하드웨어
-
-캔위성을 기존 방식처럼 낙하산을 통해 낙하하는 것이 아닌 로켓에서 캔위성이 사출되면 글라이더 형식의 날개를 전개하여 활강하며 낙하하는 비행체의 방식
-낙하 과정에서 상승타, 방향 제어 필요
-
-라즈베리 활용 직접 제작
-
-#### 상승타 - 활강제어
-
-상승타 제어를 통한 활강 제어
-
-IMU 센서 값에 따른 상승타 각도 제어
-
-- 캔위성 각도 양 -> 상승타 각도 음 -> 앞으로 회전
-- 캔위성 각도 양 -> 상승타 각도 양 -> 활강
-
-#### ??? - 좌우제어
-
-- 좌우제어 방안 모색중 
-
-#### test 해야할 것
-
-- 진동시험, 충격시험
-
-### 캔위성 소프트웨어
-
-라즈베리파이 사용
-
-IMU, GPS 등 센서값 데이터 수집 (CSV 파일 제작 코드 필요)
-
-GPS에 따라서 turn left, right 하는 코드
-ㄴ> 현재 상태에 따라 모터를 직접적으로 작동시키는 코드 (can_Motor.py)
-
-조도센서에 따라서 서보모터 작동시키는 코드 (can_Light.py) X
-
-조도센서 안쓰고 GPS 고도에 따라서 서보모터 작동시키도록
-+) User CMD로 WINGOPEN보내고 지상국코드
-+) WINGOPEN 받고 FSW 캔위성 코드
-
-
-서보모터 코드 (can_Servo.py)
-시작 state를 각각 -1,-1로 두어서 승강타 펴지면 0,0까지 올리도록 자동 세팅 코드
-
-처음 GPS 신호 잡힌곳을 Lat0, Lon0로 설정
-
-can_light, servo, motor 등 추가된 코드에 대해 멀티프로세싱? 쓰레드? 어떻게 해야하는가
-
-라즈베리파이 배터리 5.25V 정도로 조절하기
 
 -->
