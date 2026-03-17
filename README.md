@@ -22,9 +22,6 @@
 
 ```python
     while can_Common.can_BT.BT_Rx_Op()[0:7] != "CONNECT": # This chekcs connection with GS
-        print("Waiting for connection...")
-        time.sleep(1)
-    print("Connected to GS")
 
     while True:
         can_loop()
@@ -48,7 +45,47 @@
 
 이 파일은 직접 실행하지 않고 main에서 호출되어 사용합니다. 디버깅을 위해 직접 실행하실 수 있습니다.
 
-### `can_Camera`
+### `can_Camera.py`
+
+Operation이 호출될 때마다 사진을 촬영합니다. picamera module 사용합니다.
+
+촬영된 사진은 BT로 지상국으로 전송되며 라즈베리파이 내부에 직접 저장됩니다. 지상국으로 전송되는 주기는 `can_main.py` 및 `can_Camera.py`를 통해 변경할 수 있습니다.
+
+BT 전송은 라즈베리파이 내에서 base64로 encoding 하여 전송됩니다. 지상국에서는 decode하는 코드로 수신된 사진을 확인할 수 있습니다.
+
+사진의 size는 필요에 따라 화질을 변경해도 좋지만 BT 센서의 시간당 전송가능용량을 고려하셔야 합니다.
+
+### `can_GPS.py`
+
+```python
+# $GPGGA,,,,,,0,00,,,M,0.0,M,,0000*48\r\n
+        if GPS_Buf == "$":
+            if GPS_DATA[0:6] == "$GPGGA":  # 원하는 데이터 형식 수신시 처리
+                a = GPS_DATA.split(',')
+                Lat, Lon, Alt = a[2], a[4], a[9]
+                writer.writerow(["GPS_DATA", *map(lambda x: str(x), GPS_DATA.split(','))])
+```
+위도, 경도, 고도 등 필요한 데이터는 $GPGGA로 시작하여 데이터가 들어옵니다. 다른 정보가 필요할 경우 직접 센서 메뉴얼을 확인하시고 코드 수정하시면 됩니다.
+
+학교에 GPS 센서 여유분이 어느정도 있습니다. 다만 일부 센서는 고장난 센서입니다.
+
+충북과학고 부지 내에서는 GPS 신호가 거의 잡히지 않았었습니다. 웬만하면 캔위성 대회측에서 제공받은 새 GPS 센서를 사용하는게 좋습니다.
+
+### `can_IMU.py`
+
+IMU 센서는 Roll, Pitch, Yaw 각 축별 pos나 x,y,z 축별 선형 가속도를 측정하는 센서입니다. 다른 센서들과 마찬가지로 간편화된 함수가 있고, BT로 전송합니다.
+
+IMU 센서 메뉴얼 찾아보면 위 정보 말고 다른 데이터도 수신할 수 있도록 mode 변경할 수 있으니 직접 mode 변경하고 코드 수정하면 됩니다.
+
+
+추가적으로 설명하자면
+```python
+GPS_serial = serial.Serial('/dev/ttyAMA2', baudrate=9600, parity='N', timeout=0.001)  # when connect to GPIO pins (RX: GPIO 4 TX: GPIO 5)
+GPS_serial = serial.Serial('COM5', baudrate=9600, parity='N', timeout=0.001)  # when connect to USB
+```
+이와 같이 Serial 연결코드가 있을 때
+- 라즈베리파이 내에서 사용할 때에는  ttyAMAn 같이 라즈베리파이 회로에 맞게 설명하면 되고
+- 디버깅, 연결확인 등을 위해 노트북에 직접 연결할 때에는 장치관리자에서 Port 확인하고 아래 코드처럼 하면 됩니다.
 
 
 <!--
