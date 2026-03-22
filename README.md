@@ -1,6 +1,6 @@
 # 2025_CANSAT_FSW
 
-> FLight Software Program for 2025 CANSAT Competition Korea
+> Flight Software Program for 2025 CANSAT Competition Korea
 > 
 > These files are used on the Raspberry Pi.
 > 
